@@ -17,24 +17,22 @@ int main (){
 	int qubits1[1] = {1};
 	int qubits2[2] = {0,1};
 	
-	qreg qRegister1;
-	qRegister1.nqubits = 2;
+	qreg newregister = newqreg(2);
 	printf("\nInitialize1:");
-	qinit(&qRegister1);
-	qprint(qRegister1);
+	qprint(newregister);
 	
 	printf("\nHgate1:");
-	qgate(Hgate, &qRegister1, qubits1);
-	qprint(qRegister1);
+	applyqgate(Hgate, &newregister, qubits1);
+	qprint(newregister);
 	
 	printf("\nCNOT1:");
-	qgate(CNOTgate, &qRegister1, qubits2);
-	qprint(qRegister1);
+	applyqgate(CNOTgate, &newregister, qubits2);
+	qprint(newregister);
 	
-	printf("\nmeasurement0: %d",measure(&qRegister1, 0));
-	qprint(qRegister1);
-	printf("\nmeasurement1: %d",measure(&qRegister1, 1));
-	qprint(qRegister1);
+	printf("\nmeasurement0: %d",measure(&newregister, 0));
+	qprint(newregister);
+	printf("\nmeasurement1: %d",measure(&newregister, 1));
+	qprint(newregister);
 	
 	
 	return 0;
