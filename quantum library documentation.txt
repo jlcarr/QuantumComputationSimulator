@@ -5,6 +5,7 @@ To add
 //size up gates qgate nHgate(int n);
 //Add in matrix operations
 //controlled U gate
+//binary arithmetic using basic gates
 
 
 Index
