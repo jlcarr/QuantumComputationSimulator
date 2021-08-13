@@ -137,7 +137,7 @@ void qprint(qreg reg){
 
 void qgateprint(qgate gate){
 	for(int i=0;i<(int)pow(2,gate.nqubits);i++){
-		printf("\n");
+		printf("\n\n");
 		for (int j=0; j<(int)pow(2,gate.nqubits); j++){
 			cprint(gate.matrix[i][j]);
 			printf("\t");
@@ -151,10 +151,13 @@ qreg newqreg(int nqubits){
 	//initialize the return value
 	qreg returnVal;
 	returnVal.nqubits = nqubits;
-	//create a fresh new array of 0s
-	returnVal.state = calloc((int)pow(2,nqubits),sizeof(double complex));
-	//initialize the definite 0 state to 100% probability
-	returnVal.state[0] = 1;
+	if (nqubits) {
+		//create a fresh new array of 0s
+		returnVal.state = calloc((int)pow(2,nqubits),sizeof(double complex));
+		//initialize the definite 0 state to 100% probability
+		returnVal.state[0] = 1;
+	}
+	else returnVal.state = NULL;
 	return returnVal;
 }
 
@@ -190,7 +193,7 @@ void freeqgate(qgate* gate){
 }
 
 
-qreg* qregcat(qreg* dest, qreg* src ){
+qreg qregcat(qreg* dest, qreg* src ){
 	//create new register to fit the concatenated ones into
 	qreg newreg = newqreg(dest->nqubits+src->nqubits);
 	//fill new register with the combination of the two superpositioned states
@@ -201,8 +204,172 @@ qreg* qregcat(qreg* dest, qreg* src ){
 	//update destination and return
 	dest->nqubits = newreg.nqubits;
 	dest->state = newreg.state;
-	return dest;
+	return *dest;
 }
+
+
+int issep(qreg reg, int nqubits, int* qubits){
+	int qubits2[reg.nqubits-nqubits], found,index,rows,cols,i,j,k;
+	for (i=0, index=0; i<reg.nqubits; i++) {
+		for (j=0, found=0; j<nqubits && !found; j++) if(i==qubits[j]) found=1;
+		if (!found) qubits2[index++] = i;
+	}
+	
+	//build the separability matrix
+	rows=(int)(pow(2,nqubits));
+	cols=(int)(pow(2,reg.nqubits-nqubits));
+	double complex sepmatrix[rows][cols];
+	for (i=0; i<rows; i++) for (j=0; j<cols; j++){
+		//convert matrix index to state index
+		index=0;
+		for (k=0; k<nqubits; k++) if (i%((int)pow(2,k+1))/((int)pow(2,k))) index+=(int)(pow(2,qubits[k]));
+		for (k=0; k<reg.nqubits-nqubits; k++) if (j%((int)pow(2,k+1))/((int)pow(2,k))) index+=(int)(pow(2,qubits2[k]));
+		//add entry to separability matrix
+		sepmatrix[i][j] = reg.state[index];
+	}
+		
+	// now determine if the matrix is rank 1; i.e. an outer product
+	int zero, indexzero,mindim, rank;
+	double complex tempvector[cols], multi;
+	//find the minimum dimension
+	if(rows<cols) mindim=rows;
+	else mindim=cols;
+	
+	//row reduce
+	for(index=0, indexzero=0;index<mindim;index++){
+		//bring rows with a zero in column 'index' down to the bottom (ignoring rows above 'index' as they have already been used.
+		for(i=index;i<rows;i++)if(sepmatrix[i][index]==0){ //find a leading zero 'i' in column 'index'
+			for(j=i, zero=i;j<rows;j++) if(sepmatrix[j][index]!=0) zero=j; //find the lowest leading non-zero below the leading zero 'i' in column 'index'
+			for(j=indexzero;j<index;j++) if(sepmatrix[j][index]!=0) zero=j; //find the lowest leading non-zero above row 'index' in column 'index' and give preference
+			if(i!=zero){ //swap the leading zero in 'i' with the best non-zero found 'zero' if applicable
+				for(j=0;j<cols;j++) tempvector[j]=sepmatrix[i][j];
+				for(j=0;j<cols;j++) sepmatrix[i][j]=sepmatrix[zero][j];
+				for(j=0;j<cols;j++) sepmatrix[zero][j]=tempvector[j];
+			}
+		}
+		//if there is a leading 1, then use it to remove all leading 1s below
+		if(sepmatrix[index][index]!=0) for (indexzero=index+1, i=0; i<rows; i++) if(i!=index && sepmatrix[i][index]!=0){
+			multi=sepmatrix[index][index];
+			for (j=0; j<cols; j++) sepmatrix[index][j]*=sepmatrix[i][index];
+			for (j=0; j<cols; j++) sepmatrix[i][j]*=multi;
+			for (j=0; j<cols; j++) sepmatrix[i][j]-=sepmatrix[index][j];
+		}
+	}
+
+	//count up the leading 1s to get rank
+	rank=mindim;
+	for(i=0;i<mindim;i++){
+		for (j=0, found=0; j<cols && !found; j++) if(sepmatrix[i][j]!=0) found=1;
+		if (!found) rank--;
+	}
+	
+	return rank==1;
+}
+
+
+qreg qregsep(qreg* src, int nqubits, int* qubits){
+	//ensure the state is actually separable
+	if (!issep(*src,nqubits,qubits)) return newqreg(0);
+	
+	int qubits2[src->nqubits-nqubits], found,index,rows,cols,i,j,k;
+	rows=(int)(pow(2,nqubits));
+	cols=(int)(pow(2,src->nqubits-nqubits));
+	double complex sepmatrix[rows][cols], temp;
+	qreg org = newqreg(src->nqubits-nqubits);
+	qreg new = newqreg(nqubits);
+	//double complex* org = calloc(cols,sizeof(double complex));
+	//double complex* new = calloc(rows,sizeof(double complex));
+	
+	//create the difference between all the qubits and 'qubits'
+	for (i=0, index=0; i<src->nqubits; i++) {
+		for (j=0, found=0; j<nqubits && !found; j++) if(i==qubits[j]) found=1;
+		if (!found) qubits2[index++] = i;
+	}
+	//create separability matrix
+	for (i=0; i<rows; i++) for (j=0; j<cols; j++){
+		//convert matrix index to state index
+		index=0;
+		for (k=0; k<nqubits; k++) if (i%((int)pow(2,k+1))/((int)pow(2,k))) index+=(int)(pow(2,qubits[k]));
+		for (k=0; k<src->nqubits-nqubits; k++) if (j%((int)pow(2,k+1))/((int)pow(2,k))) index+=(int)(pow(2,qubits2[k]));
+		//add entry to separability matrix
+		sepmatrix[i][j] = src->state[index];
+	}
+	//search for a nonzero row in the matrix
+	for (i=0, found=0; i<rows && !found; i++) for (j=0; j<cols && !found; j++) if(sepmatrix[i][j]!=0) found=i;
+	//used that row to create org
+	for (i=0; i<cols; i++) org.state[i]=sepmatrix[found][i];
+	for (i=0, temp=0; i<cols; i++) temp+=cabs(org.state[i])*cabs(org.state[i]);
+	for (i=0; i<cols; i++) org.state[i]/=csqrt(temp);
+	
+	//search for a nonzero col in the matrix
+	for (i=0, found=0; i<cols && !found; i++) for (j=0; j<rows && !found; j++) if(sepmatrix[j][i]!=0) found=i;
+	//use that row to create new
+	for (i=0; i<rows; i++) new.state[i]=sepmatrix[i][found];
+	for (i=0, temp=0; i<rows; i++) temp+=cabs(new.state[i])*cabs(new.state[i]);
+	for (i=0; i<rows; i++) new.state[i]/=csqrt(temp);
+	
+	//replace the sorce
+	freeqreg(src);
+	src->nqubits = org.nqubits;
+	src->state = org.state;
+	
+	return new;
+}
+
+/*
+int qregsep(qreg reg, int nqubits, int* qubits){
+	//save initial state temporarily
+	qreg temp = newqreg(reg.nqubits);
+	for (int i=0; i<pow(2, reg.nqubits); i++) temp.state[i] = reg.state[i];
+	
+	//add up probabilities of all states where 'qubit1' is 1
+	double prob1 = 0;
+	for (int i=0; i<pow(2, temp.nqubits); i++) if (i%((int)pow(2,qubit1+1))/((int)pow(2,qubit1))) prob1 += cabs(temp.state[i])*cabs(temp.state[i]);
+	
+	printf("\n'qubit1' is 1: %g\n", prob1);
+	
+	//collapse qubit1 in temp to 1 if possible
+	double prob11 = 0;
+	if(prob1!=0){
+		for (int i=0; i<pow(2, temp.nqubits); i++){
+			//divide out probability of 'qubit1' being 1 since it is now definite
+			if (i%((int)pow(2,qubit1+1))/((int)pow(2,qubit1))) temp.state[i] /= csqrt(prob1);
+			//set states with 'qubit1' as 0 to 0 probability
+			else temp.state[i] = 0;
+		}
+		//add up probabilities of all states where 'qubit2' is 1 given that 'qubit1' is 1
+		for (int i=0; i<pow(2, temp.nqubits); i++) if (i%((int)pow(2,qubit2+1))/((int)pow(2,qubit2))) prob11 += cabs(temp.state[i])*cabs(temp.state[i]);
+		//reset temp state
+		for (int i=0; i<pow(2, reg.nqubits); i++) temp.state[i] = reg.state[i];
+	}
+	//otherwise there is no chance of 11 being the result
+	
+	printf("\n'qubit2' is 1 given that 'qubit1' is 1: %g\n", prob11);
+	
+	//collapse qubit1 in temp to 0 if possible
+	double prob01 = 0;
+	if (prob1!=1) {
+		for (int i=0; i<pow(2, reg.nqubits); i++){
+			//set states with 'qubit1' as 1 to 0 probability
+			if (i%((int)pow(2,qubit1+1))/((int)pow(2,qubit1))) reg.state[i] = 0;
+			//divide out probability of 'qubit1' being 0 since it is now definite
+			else reg.state[i] /= csqrt(1-prob1);
+		}
+		//add up probabilities of all states where 'qubit2' is 1 given that 'qubit1' is 0
+		for (int i=0; i<pow(2, temp.nqubits); i++) if (i%((int)pow(2,qubit2+1))/((int)pow(2,qubit2))) prob01 += cabs(temp.state[i])*cabs(temp.state[i]);
+	}
+	//otherwise there is no chance of 11 being the result
+	
+	printf("\n'qubit2' is 1 given that 'qubit1' is 0: %g\n", prob01);
+	
+	//free the temp state
+	free(temp.state);
+	
+	//return the comparison of the possible states for test of entanglement
+	return (prob01==prob11);
+}
+*/
+//qreg* qregsep(qreg* src, int nqubits, int* qubits)
 
 
 int measure(qreg* reg, int qubit){
@@ -329,5 +496,9 @@ qgate QFTgate(int nqubits){
 	return returnVal;
 }
 
-
-
+qgate CkNOTgate(int k){
+	qgate returnVal = newqgate(k+1);
+	for (int i = 0; i<(int)pow(2,k+1); i++) for (int j = 0; j<(int)pow(2,k+1); j++) returnVal.matrix[i][j] = (i==j);
+	for (int i = (int)pow(2,k+1)-2; i<(int)pow(2,k+1); i++) for (int j = (int)pow(2,k+1)-2; j<(int)pow(2,k+1); j++) returnVal.matrix[i][j] = !(i==j);
+	return returnVal;
+} //k-Control Controlled NOT gate: qubit 0 is target, all others are control

@@ -980,7 +980,7 @@ void main(){
 	
 	qubits1[0]=1;
 	applyqgate(Zgate, &newregister, qubits1);
-	printf("\nAfter Hadamard gate:");
+	printf("\nAfter Z gate:");
 	qprint(newregister);
 	
 	
@@ -1012,7 +1012,7 @@ After Hadamard gate:
 10: 0.707107
 11: 0
 
-After Hadamard gate:
+After Z gate:
 00: 0.707107
 01: 0
 10: -0.707107

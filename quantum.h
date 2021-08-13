@@ -4,6 +4,9 @@
 
 #include <stdio.h>
 
+//ifndef clinalg
+//include "clinalg.h"
+//endif
 
 //qubit register and quantum gate structs
 struct qreg{
@@ -26,7 +29,9 @@ qreg newqreg(int nqubits);
 qgate newqgate(int nqubits);
 void freeqreg(qreg* reg);
 void freeqgate(qgate* gate);
-qreg* qregcat(qreg* dest, qreg* src );
+qreg qregcat(qreg* dest, qreg* src );
+int issep(qreg reg, int nqubits, int* qubits);
+qreg qregsep(qreg* src, int nqubits, int* qubits);
 
 int measure(qreg* reg, int qubit);
 int Hmeasure(qreg* reg, int qubit);
@@ -50,6 +55,7 @@ extern const qgate CSWAPgate; //(universal) Fredkin gate: qubit 0 and 1 are targ
 
 qgate Rgate(double angle); //Phase shift gate
 qgate QFTgate(int nqubits); //Quantum Fourrier Transform gate
+qgate CkNOTgate(int k); //k-Control Controlled NOT gate: qubit 0 is target, all others are control
 
 
 //To Add:
