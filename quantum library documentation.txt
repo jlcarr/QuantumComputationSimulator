@@ -1,44 +1,44 @@
-Qlib documentation
+# quantum.c Documentation
 
-To add
-//combind gates
-//size up gates qgate nHgate(int n);
-//Add in matrix operations
-//controlled U gate
-//binary arithmetic using basic gates
+## Todo
+- Combind gates
+- Size up gates qgate nHgate(int n);
+- Add in matrix operations
+- Controlled U gate
+- Binary arithmetic using basic gates
 
 
-Index
+## Index
 
 1. The structs
-	Quantum register (qreg)
-	Quantum gate (qgate)
+   - Quantum register (qreg)
+   - Quantum gate (qgate)
 2. The functions
-	New quantum register (newqreg)
-	New quantum gate (newqgate)
-	Clear quantum register (freeqreg)
-	Clear quantum gate (freeqgate)
-	Concatenate quantum registers (qregcat)
-	Print quantum register (qprint)
-	Print quantum gate (qgateprint)
-	Measure qubit in standard basis (measure)
-	Measure qubit in hadamard basis (Hmeasure)
-	Apply quantum gate (applyqgate)
+   - New quantum register (newqreg)
+   - New quantum gate (newqgate)
+   - Clear quantum register (freeqreg)
+   - Clear quantum gate (freeqgate)
+   - Concatenate quantum registers (qregcat)
+   - Print quantum register (qprint)
+   - Print quantum gate (qgateprint)
+   - Measure qubit in standard basis (measure)
+   - Measure qubit in hadamard basis (Hmeasure)
+   - Apply quantum gate (applyqgate)
 3. The gates
-	Hadamard gate (Hgate)
-	Controlled NOT gate (CNOTgate)
-	Pauli X gate (Xgate)
-	Pauli Y gate (Ygate)
-	Pauli Z gate (Zgate)
-	Swap gate (SWAPgate)
-	Square root of Swap gate (sqrtSWAPgate)
-	Toffoli gate (CCNOTgate)
-	Fredkin gate (CSWAPgate)
-	Phase shift gate (Rgate)
-	Quantum Fourier transform gate (QFTgate)
+   - Hadamard gate (Hgate)
+   - Controlled NOT gate (CNOTgate)
+   - Pauli X gate (Xgate)
+   - Pauli Y gate (Ygate)
+   - Pauli Z gate (Zgate)
+   - Swap gate (SWAPgate)
+   - Square root of Swap gate (sqrtSWAPgate)
+   - Toffoli gate (CCNOTgate)
+   - Fredkin gate (CSWAPgate)
+   - Phase shift gate (Rgate)
+   - Quantum Fourier transform gate (QFTgate)
 
 
-The structs
+## The structs
 
 
 Name:			Quantum registers
@@ -71,7 +71,7 @@ int main(){
 
 
 
-The functions
+## The functions
 
 
 Name:			New register
@@ -381,7 +381,7 @@ Register after Hadamard gate on qubit 0:
 
 
 
-The gates
+## The gates
 
 
 Name:			Hadamard Gate 
