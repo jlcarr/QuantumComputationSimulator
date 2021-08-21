@@ -40,20 +40,24 @@
 
 ## The structs
 
+### Quantum registers
+#### Declaration**
+`qreg`
+#### Contents
+- `int nqubits`
+    - The number of qubits inside the register.
+- `double complex* state`
+   - A pointer to a complex double array containing the potability amplitudes of the states; must be of size (int)pow(2,nqubits).
+#### Description
+A simulation of a quantum register holding the superposition of states ordered such that listing the states in the order they are contained in 'state' counts upwards in binary. See qprint.
 
-Name:			Quantum registers
-Declaration:		qreg
-Contents: 		int nqubits
-				The number of qubits inside the register.
-			double complex* state
-				A pointer to a complex double array containing the potability amplitudes of the states; must be of size (int)pow(2,nqubits).
-Description: 		A simulation of a quantum register holding the superposition of states ordered such that listing the states in the order they are contained in 'state' counts upwards in binary. See qprint.
-Example:
+#### Example
+```
 int main(){
 	qreg newregister;
 	return 0;
 }
-
+```
 
 Name:			Quantum gate
 Declaration:		qgate
