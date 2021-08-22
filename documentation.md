@@ -10,7 +10,7 @@
 
 ## Index
 
-1. The structs
+1. The Structs
    - Quantum register (qreg)
    - Quantum gate (qgate)
 2. The functions
@@ -38,10 +38,10 @@
    - Quantum Fourier transform gate (QFTgate)
 
 
-## The structs
+## The Structs
 
 ### Quantum registers
-#### Declaration**
+#### Declaration
 `qreg`
 #### Contents
 - `int nqubits`
@@ -49,8 +49,7 @@
 - `double complex* state`
    - A pointer to a complex double array containing the potability amplitudes of the states; must be of size (int)pow(2,nqubits).
 #### Description
-A simulation of a quantum register holding the superposition of states ordered such that listing the states in the order they are contained in 'state' counts upwards in binary. See qprint.
-
+A simulation of a quantum register holding the superposition of states ordered such that listing the states in the order they are contained in `state` counts upwards in binary. See `qprint`.
 #### Example
 ```
 int main(){
@@ -59,20 +58,23 @@ int main(){
 }
 ```
 
-Name:			Quantum gate
-Declaration:		qgate
-Contents: 		int nqubits
-				The number of qubits acted upon by the gate/
-			double complex** matrix
-				A pointer to an array of complex double array, i.e. a complex double matrix, describing the gate ordered in a manner corresponding to that of the quantum registers; must be of size (int)pow(2,nqubits) * (int)pow(2,nqubits).
-Description: 		A simulation of a quantum gate that may act upon a qubit in a superposition of states. See printgate.
-Example:
+### Quantum gate
+#### Declaration
+`qgate`
+#### Contents
+- `int nqubits`
+   - The number of qubits acted upon by the gate/
+- `double complex** matrix`
+   - A pointer to an array of complex double array, i.e. a complex double matrix, describing the gate ordered in a manner corresponding to that of the quantum registers; must be of size `(int)pow(2,nqubits) * (int)pow(2,nqubits)`.
+#### Description
+A simulation of a quantum gate that may act upon a qubit in a superposition of states. See `printgate`.
+#### Example
+```
 int main(){
 	qgate newgate;
 	return 0;
 }
-
-
+```
 
 
 ## The functions
