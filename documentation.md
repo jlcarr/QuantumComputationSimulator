@@ -47,7 +47,7 @@
 - `int nqubits`
     - The number of qubits inside the register.
 - `double complex* state`
-   - A pointer to a complex double array containing the potability amplitudes of the states; must be of size (int)pow(2,nqubits).
+   - A pointer to a complex double array containing the potability amplitudes of the states; must be of size `(1<<nqubits)`.
 #### Description
 A simulation of a quantum register holding the superposition of states ordered such that listing the states in the order they are contained in `state` counts upwards in binary. See `qprint`.
 #### Example
@@ -63,9 +63,9 @@ int main(){
 `qgate`
 #### Contents
 - `int nqubits`
-   - The number of qubits acted upon by the gate/
+   - The number of qubits acted upon by the gate.
 - `double complex** matrix`
-   - A pointer to an array of complex double array, i.e. a complex double matrix, describing the gate ordered in a manner corresponding to that of the quantum registers; must be of size `(int)pow(2,nqubits) * (int)pow(2,nqubits)`.
+   - A pointer to an array of complex double array, i.e. a complex double matrix, describing the gate ordered in a manner corresponding to that of the quantum registers; must be of size `(1<<nqubits) * (1<<nqubits)`.
 #### Description
 A simulation of a quantum gate that may act upon a qubit in a superposition of states. See `printgate`.
 #### Example
