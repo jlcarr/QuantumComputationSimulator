@@ -13,7 +13,7 @@
 1. The Structs
    - Quantum register (qreg)
    - Quantum gate (qgate)
-2. The functions
+2. The Functions
    - New quantum register (newqreg)
    - New quantum gate (newqgate)
    - Clear quantum register (freeqreg)
@@ -77,15 +77,18 @@ int main(){
 ```
 
 
-## The functions
+## The Functions
 
-
-Name:			New register
-Prototype: 		qreg newqreg(int nqubits);
-Time complexity: 	O(1)
-Memory complexity: 	O(2^(nqubits))
-Description: 		Takes an integer 'nqubits' and returns a quantum register with nqubits and the state allocated and initialized to 0.
-Example:
+### New register
+#### Declaration
+`qreg newqreg(int nqubits);`
+#### Performance
+- **Time complexity**: O(1)
+- **Memory complexity**: O(2^(nqubits))
+#### Description
+Takes an integer `nqubits` and returns a quantum register with `nqubits` and the `state` allocated and initialized to `0`.
+#### Example
+```
 int main(){
 	//create a new quantum register with 2 qubits
 	qreg newregister = newqreg(2);
@@ -95,13 +98,15 @@ int main(){
 	//exit successfully
 	return 0;
 }
+```
 Output:
+```
 Initialized register:
 00: 1
 01: 0
 10: 0
 11: 0
-
+```
 
 Name:			New gate
 Prototype: 		qgate newqgate(int nqubits);
