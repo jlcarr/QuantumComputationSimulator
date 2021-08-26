@@ -108,12 +108,16 @@ Initialized register:
 11: 0
 ```
 
-Name:			New gate
-Prototype: 		qgate newqgate(int nqubits);
-Time complexity: 	O(2^(nqubits))
-Memory complexity: 	O(4^(nqubits))
-Description: 		Takes an integer 'nqubits' and creates a quantum gate acting on nqubits, and allocates an array of arrays containing the action of the gate initialized to the identity matrix, which is given as the gate's matrix.
-Example:
+### New gate
+#### Declaration
+`qgate newqgate(int nqubits);`
+#### Performance
+- **Time complexity**: O(2^(nqubits))
+- **Memory complexity**: O(4^(nqubits))
+#### Description
+Takes an integer `nqubits` and creates a quantum gate acting on `nqubits`, and allocates an array of arrays containing the action of the gate initialized to the identity matrix, which is given as the gate's matrix.
+#### Example
+```
 int main(){
 	//create a new quantum gate acting on 2 qubits
 	qgate newgate = newqgate(2);
@@ -123,13 +127,15 @@ int main(){
 	//exit successfully
 	return 0;
 }
+```
 Output:
+```
 Initialized gate:
 1	0	0	0	
 0	1	0	0	
 0	0	1	0	
 0	0	0	1
-
+```
 
 Name:			Clear register
 Prototype: 		void freeqreg(qreg* reg);
