@@ -80,7 +80,7 @@ int main(){
 ## The Functions
 
 ### New register
-#### Declaration
+#### Prototype
 `qreg newqreg(int nqubits);`
 #### Performance
 - **Time complexity**: O(1)
@@ -109,7 +109,7 @@ Initialized register:
 ```
 
 ### New gate
-#### Declaration
+#### Prototype
 `qgate newqgate(int nqubits);`
 #### Performance
 - **Time complexity**: O(2^(nqubits))
@@ -137,12 +137,16 @@ Initialized gate:
 0	0	0	1
 ```
 
-Name:			Clear register
-Prototype: 		void freeqreg(qreg* reg);
-Time complexity: 	O(1)
-Memory complexity: 	O(1)
-Description: 		Takes a quantum register 'reg' and frees the array assigned to reg->state and sets reg->nqubits to 0.
-Example:
+### Clear register
+#### Prototype
+`void freeqreg(qreg* reg);`
+#### Performance
+- **Time complexity**: O(1)
+- **Memory complexity**: O(1)
+#### Description
+Takes a quantum register `reg` and frees the array assigned to `reg->state` and sets `reg->nqubits` to `0`.
+#### Example
+```
 int main(){
 	//create a new quantum register with 2 qubits
 	qreg newregister = newqreg(2);
@@ -156,7 +160,9 @@ int main(){
 	//exit successfully
 	return 0;
 }
+```
 Output:
+```
 Initialized register of size 2:
 00: 1
 01: 0
@@ -166,6 +172,7 @@ Initialized register of size 2:
 Reinitialized register of size 1:
 0: 1
 1: 0
+```
 
 
 Name:			Clear gate
