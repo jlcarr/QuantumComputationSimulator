@@ -108,6 +108,7 @@ Initialized register:
 11: 0
 ```
 
+
 ### New gate
 #### Prototype
 `qgate newqgate(int nqubits);`
@@ -136,6 +137,7 @@ Initialized gate:
 0	0	1	0	
 0	0	0	1
 ```
+
 
 ### Clear register
 #### Prototype
@@ -175,12 +177,16 @@ Reinitialized register of size 1:
 ```
 
 
-Name:			Clear gate
-Prototype: 		void freeqgate(qgate* gate);
-Time complexity: 	O(2^(gate->nqubits))
-Memory complexity: 	O(1)
-Description: 		Takes a quantum gate 'gate' and frees the arrays in to gate->matrix, frees gate->matrix and sets gate->nqubits to 0.
-Example:
+### Clear gate
+#### Prototype
+`void freeqgate(qgate* gate);`
+#### Performance
+- **Time complexity**: O(2^(gate->nqubits))
+- **Memory complexity**: O(1)
+#### Description
+Takes a quantum gate 'gate' and frees the arrays in to gate->matrix, frees gate->matrix and sets gate->nqubits to 0.
+#### Example
+```
 int main(){
 	//create a new quantum register with 2 qubits
 	qgate newgate = newqgate(2);
@@ -194,7 +200,9 @@ int main(){
 	//exit successfully
 	return 0;
 }
+```
 Output:
+```
 Initialized gate of size 2:
 1	0	0	0	
 0	1	0	0	
@@ -204,6 +212,7 @@ Initialized gate of size 2:
 Reinitialized gate of size 1:
 1	0	
 0	1
+```
 
 
 Name:			Print quantum register
