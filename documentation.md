@@ -215,12 +215,16 @@ Reinitialized gate of size 1:
 ```
 
 
-Name:			Print quantum register
-Prototype: 		void qprint(qreg reg);
-Time complexity: 	O((reg.nqubits)*2^(reg.nqubits))
-Memory complexity: 	O(reg.nqubits)
-Description: 		This function prints the states of a quantum register along with the associated probability amplitude. The order is the standard in which the list of states counts upwards in binary. The nth qubit hence corresponds to the 2^n binary position.
-Example:
+### Print quantum register
+#### Prototype
+`void qprint(qreg reg);`
+#### Performance
+- *Time complexity*: O((`reg.nqubits`)*2^(`reg.nqubits`))
+- *Memory complexity*: O(`reg.nqubits`)
+#### Description
+This function prints the states of a quantum register along with the associated probability amplitude. The order is the standard in which the list of states counts upwards in binary. The nth qubit hence corresponds to the 2^n binary position.
+#### Example
+```
 int main(){
 	//create a new quantum register with 2 qubits
 	qreg newregister = newqreg(2);
@@ -230,12 +234,15 @@ int main(){
 	//exit successfully
 	return 0;
 }
+```
 Output:
+```
 Initialized register:
 00: 1
 01: 0
 10: 0
 11: 0
+```
 
 
 Name:			Print quantum gate
