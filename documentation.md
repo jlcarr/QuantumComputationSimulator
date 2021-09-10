@@ -84,7 +84,7 @@ int main(){
 `qreg newqreg(int nqubits);`
 #### Performance
 - **Time complexity**: O(1)
-- **Memory complexity**: O(2^(nqubits))
+- **Memory complexity**: O(2^`nqubits`)
 #### Description
 Takes an integer `nqubits` and returns a quantum register with `nqubits` and the `state` allocated and initialized to `0`.
 #### Example
@@ -113,8 +113,8 @@ Initialized register:
 #### Prototype
 `qgate newqgate(int nqubits);`
 #### Performance
-- **Time complexity**: O(2^(nqubits))
-- **Memory complexity**: O(4^(nqubits))
+- **Time complexity**: O(2^`nqubits`)
+- **Memory complexity**: O(4^`nqubits`)
 #### Description
 Takes an integer `nqubits` and creates a quantum gate acting on `nqubits`, and allocates an array of arrays containing the action of the gate initialized to the identity matrix, which is given as the gate's matrix.
 #### Example
@@ -181,7 +181,7 @@ Reinitialized register of size 1:
 #### Prototype
 `void freeqgate(qgate* gate);`
 #### Performance
-- **Time complexity**: O(2^(gate->nqubits))
+- **Time complexity**: O(2^`gate->nqubits`)
 - **Memory complexity**: O(1)
 #### Description
 Takes a quantum gate 'gate' and frees the arrays in to gate->matrix, frees gate->matrix and sets gate->nqubits to 0.
@@ -219,7 +219,7 @@ Reinitialized gate of size 1:
 #### Prototype
 `void qprint(qreg reg);`
 #### Performance
-- *Time complexity*: O((`reg.nqubits`)*2^(`reg.nqubits`))
+- *Time complexity*: O(`reg.nqubits`*2^`reg.nqubits`)
 - *Memory complexity*: O(`reg.nqubits`)
 #### Description
 This function prints the states of a quantum register along with the associated probability amplitude. The order is the standard in which the list of states counts upwards in binary. The nth qubit hence corresponds to the 2^n binary position.
@@ -245,12 +245,16 @@ Initialized register:
 ```
 
 
-Name:			Print quantum gate
-Prototype: 		void printgate(qgate gate);
-Time complexity: 	O(4^(gate.nqubits))
-Memory complexity: 	O(1)
-Description: 		This function prints the matrix representing a quantum gate. The order is the standard in which the list of states of the quantum register state vector counts upwards in binary. The nth qubit hence corresponds to the 2^n binary position.
-Example:
+### Print quantum gate
+#### Prototype
+`void printgate(qgate gate);`
+#### Performance
+- *Time complexity*: O(4^(gate.nqubits))
+- *Memory complexity*: O(1)
+#### Description
+This function prints the matrix representing a quantum gate. The order is the standard in which the list of states of the quantum register state vector counts upwards in binary. The nth qubit hence corresponds to the 2^n binary position.
+#### Example
+```
 int main(){
 	//print the Hadamard gate
 	printf("\nThe Hadamard gate:");
@@ -258,10 +262,13 @@ int main(){
 	//exit successfully
 	return 0;
 }
+```
 Output:
+```
 The Hadamard gate:
 0.707107	0.707107	
 0.707107	-0.707107
+```
 
 
 Name:			Concatenate quantum registers
