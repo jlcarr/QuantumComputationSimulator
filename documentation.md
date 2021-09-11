@@ -271,12 +271,16 @@ The Hadamard gate:
 ```
 
 
-Name:			Concatenate quantum registers
-Prototype: 		qreg* qregcat(qreg* dest, qreg* src );
-Time complexity: 	O(2^(dest->nqubits+src->nqubits))
-Memory complexity: 	O(1)
-Description: 		This function takes two quantum registers, 'qreg' and 'src' and combines them into a single register which is stored in 'dest', while 'src' is freed. The function returns the updated pointer 'dest'. Note that the size of the new register will be dest->nqubits+src->nqubits, and hence the length of the state of the return value will be 2^(dest->nqubits+src->nqubits). Note that the register 'src' is appended to the end of 'dest' and therefore when printing the result of qregcat the states in the 2^(x+dest->nqubits) binary places correspond to the x states of 'src'.
-Example:
+### Concatenate quantum registers
+#### Prototype
+`qreg* qregcat(qreg* dest, qreg* src);`
+#### Performance
+- *Time complexity*: O(2^(`dest->nqubits`+`src->nqubits`))
+- *Memory complexity*: O(1)
+#### Description
+This function takes two quantum registers, `qreg` and `src` and combines them into a single register which is stored in `dest`, while `src` is freed. The function returns the updated pointer `dest`. Note that the size of the new register will be `dest->nqubits+src->nqubits`, and hence the length of the state of the return value will be `1<<(dest->nqubits+src->nqubits)`. Note that the register `src` is appended to the end of `dest` and therefore when printing the result of qregcat the states in the 2^(x+`dest->nqubits`) binary places correspond to the x states of `src`.
+#### Example
+```
 int main(){
 	//create a new quantum register with 2 qubits
 	qreg register1 = newqreg(2);
@@ -302,7 +306,9 @@ int main(){
 	//exit successfully
 	return 0;
 }
-Output:
+```
+Output
+```
 Initialized register1:
 00: 1
 01: 0
@@ -328,6 +334,7 @@ The concatenation of register1 and register 2:
 101: 0
 110: 0
 111: 0
+```
 
 
 Name:			Measure qubit in standard basis
