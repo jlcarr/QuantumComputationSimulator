@@ -371,12 +371,16 @@ Measurement of qubit 0 result: 0
 ```
 
 
-Name:			Measure qubit in Hadmard basis
-Prototype: 		int measure(qreg* reg, int qubit);
-Time complexity: 	O(reg->nqubits)
-Memory complexity: 	O(1)
-Description: 		This function makes a measurement on the 'qubit'th qubit of 'reg' in the Hadamard basis. It collapses the wave function of the qubit and returns the result of the measurement (0 for +, or 1 for -). Note that rand() from the stdlib is used for random number generation, and therefore must have been seeded with srand().
-Example:
+### Measure qubit in Hadmard basis
+#### Prototype
+`int measure(qreg* reg, int qubit);`
+#### Performance
+- *Time complexity*: O(`reg->nqubits`)
+- *Memory complexity*: O(1)
+#### Description
+This function makes a measurement on the `qubit`th qubit of `reg` in the Hadamard basis. It collapses the wave function of the qubit and returns the result of the measurement (0 for +, or 1 for -). Note that `rand()` from the `stdlib` is used for random number generation, and therefore must have been seeded with `srand()`.
+#### Example
+```
 void main(){
 	//create a new quantum register with 2 qubits
 	qreg newregister = newqreg(1);
@@ -396,7 +400,9 @@ void main(){
 	//exit successfully
 	return 0;
 }
+```
 Output:
+```
 Initialized register:
 Initialized register:
 0: 1
@@ -407,6 +413,7 @@ Register after Hadamard gate on qubit 0:
 1: 0
 
 Hadamard measurement of qubit 0 result: +
+```
 
 
 Name:			Apply quantum gate
